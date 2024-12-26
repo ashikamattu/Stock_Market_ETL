@@ -7,4 +7,4 @@ GCP
 Looker 
 
 This is the architecture diagram - 
-![alt text](Architecture-1.png)
+![alt text](Architecture.png)
