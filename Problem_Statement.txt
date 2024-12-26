@@ -1,0 +1,9 @@
+1.Get list of stocks in VUG ETF
+2.Fetch Yahoo data for those stocks
+3.Upload to GCS every day at opening time and closing time
+4.Append data with timestamp to a Consolidate BQ Table
+5.
+a-Analyzing the data, determine the loss or profit based on yesterday's recommendation by Yahoo Finance.
+ -Given that a person invested $10,000 yesterday, equally distributed among the stocks, what would be their net worth?
+b-Plot graph with 52 week low(single line) to trend in recent price
+c-Plot graph with the most recent low to trend in recent price
