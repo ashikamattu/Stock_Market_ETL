@@ -2,11 +2,12 @@ import requests
 import csv
 import pandas as pd
 from google.cloud import storage
+import datetime;
 
-tickers_df = pd.read_csv('./tickers.csv', dtype={'Symbol': str})
+tickers_df = pd.read_csv('../tickers.csv', dtype={'Symbol': str})
 tickers_df['Symbol'] = tickers_df['Symbol'].str.strip()
 
-url = 'https://yahoo-finance166.p.rapidapi.com/api/stock/get-financial-data'
+url = "https://yahoo-finance166.p.rapidapi.com/api/stock/get-financial-data"
 
 headers = {
 	"x-rapidapi-key": "6fe0cabaefmsh7ef3e2799f96313p13bba4jsn8315bbcfaddb",
@@ -34,18 +35,23 @@ for ticker in tickers_df['Symbol']:
         stocks_info_df = pd.concat([stocks_info_df,pd.DataFrame([stock_info_dict])], ignore_index = True)
     else:
         print("Failed to fetch data:", response.status_code)
+        exit()
+
+print("API Data fetched successfully.")
 
 # Validate and Upload stocks_info_df to CSV file
 current_timestamp = stocks_info_df['timeStamp'].max()
-csv_filename = str('./data/daily_stock_data_'+str(current_timestamp).replace(":", "-")+'.csv')
+csv_filename = str('../data/daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv')
 
 stocks_info_df.to_csv(csv_filename, index=False)
+
+print(f"Data saved to {csv_filename}")
 
 # Upload the CSV file to GCS
 
 bucket_name = 'bkt-stocks'
 source_file_name = csv_filename 
-destination_blob_name = csv_filename  
+destination_blob_name = str('daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv' ) 
 
 storage_client = storage.Client(project='noted-point-444318-r3')
 bucket = storage_client.bucket(bucket_name)
