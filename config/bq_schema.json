@@ -1,0 +1,15 @@
+{ "BigQuery Schema": [ 
+        { "name": "ticker", "type": "STRING" }, 
+        { "name": "current_price", "type": "FLOAT" }, 
+        { "name": "total_revenue", "type": "BIGNUMERIC" }, 
+        { "name": "ebitda", "type": "BIGNUMERIC" }, 
+        { "name": "free_cash_flow", "type": "BIGNUMERIC" },
+        { "name": "profit_margins", "type": "FLOAT" }, 
+        { "name": "revenue_growth", "type": "FLOAT" }, 
+        { "name": "debt_to_equity", "type": "FLOAT" }, 
+        { "name": "total_debt", "type": "BIGNUMERIC" }, 
+        { "name": "num_analyst_opinions", "type": "INTEGER" },
+        { "name": "recommendation_key", "type": "STRING" }, 
+        { "name": "time_stamp", "type": "TIMESTAMP" }
+    ] 
+}
