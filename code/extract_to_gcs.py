@@ -3,16 +3,25 @@ import csv
 import pandas as pd
 from google.cloud import storage
 import datetime;
+from dotenv import load_dotenv
+import os
 
-tickers_df = pd.read_csv('../tickers.csv', dtype={'Symbol': str})
-tickers_df['Symbol'] = tickers_df['Symbol'].str.strip()
+load_dotenv()
+
+# Create a .env file in the same directory as the code. Store the API_KEY and HOST in it.
 
 url = "https://yahoo-finance166.p.rapidapi.com/api/stock/get-financial-data"
 
+api_key = os.getenv("API_KEY")
+host = os.getenv("HOST")
+
 headers = {
-	"x-rapidapi-key": "6fe0cabaefmsh7ef3e2799f96313p13bba4jsn8315bbcfaddb",
-	"x-rapidapi-host": "yahoo-finance166.p.rapidapi.com"
+	"x-rapidapi-key": api_key,
+	"x-rapidapi-host": host
 }
+
+tickers_df = pd.read_csv('./tickers.csv', dtype={'Symbol': str})
+tickers_df['Symbol'] = tickers_df['Symbol'].str.strip()
 
 field_names = ['ticker','currentPrice','totalRevenue','ebitda','freeCashflow','profitMargins','revenueGrowth','debtToEquity','totalDebt','numberOfAnalystOpinions','recommendationKey','timeStamp']
 stocks_info_df = pd.DataFrame(columns = field_names)
@@ -41,7 +50,7 @@ print("API Data fetched successfully.")
 
 # Validate and Upload stocks_info_df to CSV file
 current_timestamp = stocks_info_df['timeStamp'].max()
-csv_filename = str('../data/daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv')
+csv_filename = str('./data/daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv')
 
 stocks_info_df.to_csv(csv_filename, index=False)
 
