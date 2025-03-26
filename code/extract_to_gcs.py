@@ -20,8 +20,15 @@ headers = {
 	"x-rapidapi-host": host
 }
 
-tickers_df = pd.read_csv('./tickers.csv', dtype={'Symbol': str})
+tickers_df = pd.read_csv('../tickers.csv', dtype={'Symbol': str})
 tickers_df['Symbol'] = tickers_df['Symbol'].str.strip()
+
+url = 'https://yahoo-finance166.p.rapidapi.com/api/stock/get-financial-data'
+
+headers = {
+	"x-rapidapi-key": "6fe0cabaefmsh7ef3e2799f96313p13bba4jsn8315bbcfaddb",
+	"x-rapidapi-host": "yahoo-finance166.p.rapidapi.com"
+}
 
 field_names = ['ticker','currentPrice','totalRevenue','ebitda','freeCashflow','profitMargins','revenueGrowth','debtToEquity','totalDebt','numberOfAnalystOpinions','recommendationKey','timeStamp']
 stocks_info_df = pd.DataFrame(columns = field_names)
@@ -56,10 +63,13 @@ stocks_info_df.to_csv(csv_filename, index=False)
 
 print(f"Data saved to {csv_filename}")
 
+print(f"Data saved to {csv_filename}")
+
 # Upload the CSV file to GCS
 
 bucket_name = 'bkt-stocks'
 source_file_name = csv_filename 
+destination_blob_name = str('daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv' ) 
 destination_blob_name = str('daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv' ) 
 
 storage_client = storage.Client(project='noted-point-444318-r3')
