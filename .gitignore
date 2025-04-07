@@ -5,3 +5,4 @@ Problem_Statement.txt
 *.ipynb
 config/.env
 data/*.csv
+*.jpg

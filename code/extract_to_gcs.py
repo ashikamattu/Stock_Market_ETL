@@ -20,7 +20,11 @@ headers = {
 	"x-rapidapi-host": host
 }
 
-tickers_df = pd.read_csv('./tickers.csv', dtype={'Symbol': str})
+# Construct the path to the CSV file based on path of this file
+curr_path = os.path.dirname(os.path.abspath(__file__))
+ticker_path = os.path.join(curr_path, 'tickers.csv')
+
+tickers_df = pd.read_csv(ticker_path, dtype={'Symbol': str})
 tickers_df['Symbol'] = tickers_df['Symbol'].str.strip()
 
 field_names = ['ticker','currentPrice','totalRevenue','ebitda','freeCashflow','profitMargins','revenueGrowth','debtToEquity','totalDebt','numberOfAnalystOpinions','recommendationKey','timeStamp']
@@ -50,25 +54,28 @@ print("API Data fetched successfully.")
 
 # Validate and Upload stocks_info_df to CSV file
 current_timestamp = stocks_info_df['timeStamp'].max()
-csv_filename = str('./data/daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv')
+csv_filename = str('daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv')
 
-stocks_info_df.to_csv(csv_filename, index=False)
+data_dir = os.path.join(curr_path, 'data')
+os.makedirs(data_dir,exist_ok=True)
+
+csv_file_path = os.path.join(data_dir, csv_filename)
+stocks_info_df.to_csv(csv_file_path, index=False)
 
 print(f"Data saved to {csv_filename}")
 
 # Upload the CSV file to GCS
 
 bucket_name = 'bkt-stocks'
-source_file_name = csv_filename 
 destination_blob_name = str('daily_stock_data_' + str(current_timestamp).replace(":", "-") + '.csv' ) 
 
 storage_client = storage.Client(project='noted-point-444318-r3')
 bucket = storage_client.bucket(bucket_name)
 blob = bucket.blob(destination_blob_name)
-blob.upload_from_filename(source_file_name)
+blob.upload_from_filename(csv_file_path)
 
 # TODO - Implement Logging system to log the success of the upload
-print(f"File {source_file_name} uploaded to {destination_blob_name} in bucket {bucket_name}.")
+print(f"File {csv_file_path} uploaded to {destination_blob_name} in bucket {bucket_name}.")
 
 '''
 TODO: Check if the file you are uploading already exists in the bucket. Or GCP might handle this already. Double check. 
